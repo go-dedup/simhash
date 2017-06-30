@@ -1,4 +1,4 @@
-package main
+package simhash_test
 
 import (
 	"fmt"
@@ -6,7 +6,9 @@ import (
 	"github.com/go-dedup/simhash"
 )
 
-func main() {
+// for standalone test, change package to main and the next func def to,
+// func main() {
+func Example_output() {
 	var docs = [][]byte{
 		[]byte("this is a test phrase"),
 		[]byte("this is a test phrass"),
