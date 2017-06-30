@@ -16,9 +16,9 @@
 Therefore, if two documents are similar, the Hamming-distance between the simhash of the
 documents will be small.
 
-This package currently just implements the simhash algorithm. Future work will make use of this
+This package only implements the simhash algorithm. To make use of this
 package to enable quickly identifying near-duplicate documents within a large collection of
-documents.
+documents, check out the `sho` (SimHash Oracle) package at [github.com/go-dedup/simhash/sho](https://github.com/go-dedup/simhash/tree/master/sho). It has a simple [API](https://github.com/go-dedup/simhash/tree/master/sho#api) that is easy to use. 
 
 # Installation
 
