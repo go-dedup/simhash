@@ -1,4 +1,14 @@
-# simhash
+
+# {{.Name}}
+
+{{render "license/shields" . "License" "MIT"}}
+{{template "badge/godoc" .}}
+{{template "badge/goreport" .}}
+{{template "badge/travis" .}}
+
+## {{toc 5}}
+
+## {{.Name}} - Go simhash package
 
 `simhash` is a [Go](http://golang.org/) implementation of Charikar's [simhash](http://www.cs.princeton.edu/courses/archive/spring04/cos598B/bib/CharikarEstim.pdf) algorithm.
 
@@ -13,7 +23,7 @@ documents.
 # Installation
 
 ```
-go get github.com/mfonda/simhash
+go get github.com/go-dedup/simhash
 ```
 
 # Usage
@@ -23,40 +33,22 @@ Using `simhash` first requires tokenizing a document into a set of features (don
 tokenizes the document into individual words. Better results are possible here, and future work
 will go towards this.
 
+# API
+
 Example usage:
 
-```go
-package main
+#### > {{cat "example_test.go" | color "go"}}
 
-import (
-	"fmt"
-	"github.com/mfonda/simhash"
-)
+All patches welcome.
 
-func main() {
-	var docs = [][]byte{
-		[]byte("this is a test phrase"),
-		[]byte("this is a test phrass"),
-		[]byte("foo bar"),
-	}
+## Credits
 
-	hashes := make([]uint64, len(docs))
-	for i, d := range docs {
-		hashes[i] = simhash.Simhash(simhash.NewWordFeatureSet(d))
-		fmt.Printf("Simhash of %s: %x\n", d, hashes[i])
-	}
+- [mfonda/simhash](https://github.com/mfonda/simhash) forked source
 
-	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[1], simhash.Compare(hashes[0], hashes[1]))
-	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[2], simhash.Compare(hashes[0], hashes[2]))
-}
-```
+## Similar Projects
 
-Output:
+All the following similar projects have been considered before adopting [mfonda/simhash](https://github.com/mfonda/simhash) instead.
 
-```
-Simhash of this is a test phrase: 8c3a5f7e9ecb3f35
-Simhash of this is a test phrass: 8c3a5f7e9ecb3f21
-Simhash of foo bar: d8dbe7186bad3db3
-Comparison of `this is a test phrase` and `this is a test phrass`: 2
-Comparison of `this is a test phrase` and `foo bar`: 29
-```
+- [dgryski/go-simstore](https://github.com/dgryski/go-simstore) One of the earliest but ["_not very promising_"](https://groups.google.com/forum/#!msg/golang-nuts/E9UVskCnSJc/gm7KF27LnI0J)
+- [AllenDang/simhash](https://github.com/AllenDang/simhash) Ported from C# code, but don't like its interface
+- [yanyiwu/gosimhash](https://github.com/yanyiwu/gosimhash) For Chinese only. Don't like keeping two packages for the same purpose, and don't like its dependency on "结巴"中文分词 approach
