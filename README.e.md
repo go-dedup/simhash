@@ -41,6 +41,14 @@ Example usage:
 
 All patches welcome.
 
+# TODO
+
+It does not support Chinese very well:
+
+#### > {{cat "chinese_test.go" | color "go"}}
+
+All patches welcome.
+
 ## Credits
 
 - [mfonda/simhash](https://github.com/mfonda/simhash) forked source
