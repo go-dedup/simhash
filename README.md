@@ -92,6 +92,11 @@ All patches welcome.
 
 - [mfonda/simhash](https://github.com/mfonda/simhash) forked source
 
+The most high quality open-source Go simhash implementation available. it is even [used internally by Yahoo Inc](https://github.com/yahoo/gryffin/tree/master/html-distance):
+
+[![Yahoo Inc](https://avatars3.githubusercontent.com/u/16574?v=3&s=200)](https://github.com/yahoo)
+
+
 ## Similar Projects
 
 All the following similar projects have been considered before adopting [mfonda/simhash](https://github.com/mfonda/simhash) instead.
