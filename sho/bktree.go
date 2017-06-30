@@ -6,7 +6,8 @@
 //
 // Distance is the hamming distance of the fingerprints. Since fingerprint is of size 64 (inherited from hash/fnv), Similiarity is defined as 1 - d / 64.
 //
-// In normal scenario, similarity > 95% (i.e. d>3) could be considered as duplicated html pages.
+// In normal scenario, similarity > 95% (i.e. d<3) could be considered as duplicated html pages.
+// sho -- SimHash Oracle
 package sho
 
 import (
