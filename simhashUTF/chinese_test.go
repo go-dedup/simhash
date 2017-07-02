@@ -1,10 +1,11 @@
-package simhash_test
+package simhashUTF_test
 
 import (
 	"fmt"
 
 	"github.com/go-dedup/simhash"
 	"github.com/go-dedup/simhash/sho"
+	"github.com/go-dedup/simhash/simhashUTF"
 
 	"golang.org/x/text/unicode/norm"
 )
@@ -25,8 +26,9 @@ func Example_Chinese_output() {
 	oracle := sho.NewOracle()
 	r := uint8(3)
 	hashes := make([]uint64, len(docs))
+	sh := simhashUTF.NewUTFSimhash(norm.NFKC)
 	for i, d := range docs {
-		hashes[i] = simhash.Simhash(simhash.NewUnicodeWordFeatureSet(d, norm.NFC))
+		hashes[i] = sh.GetSimhash(sh.NewUnicodeWordFeatureSet(d, norm.NFC))
 		hash := hashes[i]
 		if oracle.Seen(hash, r) {
 			fmt.Printf("=: Simhash of %x for '%s' ignored.\n", hash, d)
