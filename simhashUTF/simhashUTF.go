@@ -11,8 +11,8 @@ import (
 ////////////////////////////////////////////////////////////////////////////
 // Data type/structure definitions
 
-type SimhashUTFT struct {
-	simhash.SimhashT
+type SimhashUTF struct {
+	simhash.SimhashBase
 	f norm.Form
 }
 
@@ -25,13 +25,13 @@ var unicodeBoundaries = regexp.MustCompile(`[\pL-_']+`)
 // Function definitions
 
 // NewSimhash makes a new Simhash
-func NewSimhash() *SimhashUTFT {
-	return &SimhashUTFT{}
+func NewSimhash() *SimhashUTF {
+	return &SimhashUTF{}
 }
 
 // NewUTFSimhash makes a new SimhashUTF
-func NewUTFSimhash(_f norm.Form) *SimhashUTFT {
-	return &SimhashUTFT{f: _f}
+func NewUTFSimhash(_f norm.Form) *SimhashUTF {
+	return &SimhashUTF{f: _f}
 }
 
 // UnicodeWordFeatureSet is a feature set in which each word is a feature,
@@ -44,11 +44,11 @@ type UnicodeWordFeatureSet struct {
 	f norm.Form
 }
 
-func (st *SimhashUTFT) NewWordFeatureSet(b []byte) *UnicodeWordFeatureSet {
+func (st *SimhashUTF) NewWordFeatureSet(b []byte) *UnicodeWordFeatureSet {
 	return st.NewUnicodeWordFeatureSet(b, st.f)
 }
 
-func (st *SimhashUTFT) NewUnicodeWordFeatureSet(b []byte, f norm.Form) *UnicodeWordFeatureSet {
+func (st *SimhashUTF) NewUnicodeWordFeatureSet(b []byte, f norm.Form) *UnicodeWordFeatureSet {
 	fs := &UnicodeWordFeatureSet{simhash.WordFeatureSet{b}, f}
 	fs.Normalize()
 	return fs

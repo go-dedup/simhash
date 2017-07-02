@@ -27,7 +27,7 @@ type Simhash interface {
 	Shingle(w int, b [][]byte) [][]byte
 }
 
-type SimhashT struct {
+type SimhashBase struct {
 }
 
 type Vector [64]int
@@ -50,15 +50,15 @@ type FeatureSet interface {
 // Function definitions
 
 // NewSimhash makes a new Simhash
-func NewSimhash() *SimhashT {
-	return &SimhashT{}
+func NewSimhash() *SimhashBase {
+	return &SimhashBase{}
 }
 
 // Vectorize generates 64 dimension vectors given a set of features.
 // Vectors are initialized to zero. The i-th element of the vector is then
 // incremented by weight of the i-th feature if the i-th bit of the feature
 // is set, and decremented by the weight of the i-th feature otherwise.
-func (st *SimhashT) Vectorize(features []Feature) Vector {
+func (st *SimhashBase) Vectorize(features []Feature) Vector {
 	var v Vector
 	for _, feature := range features {
 		sum := feature.Sum()
@@ -81,7 +81,7 @@ func (st *SimhashT) Vectorize(features []Feature) Vector {
 // Vectors are initialized to zero. The i-th element of the vector is then
 // incremented by weight of the i-th feature if the i-th bit of the feature
 // is set, and decremented by the weight of the i-th feature otherwise.
-func (st *SimhashT) VectorizeBytes(features [][]byte) Vector {
+func (st *SimhashBase) VectorizeBytes(features [][]byte) Vector {
 	var v Vector
 	h := fnv.New64()
 	for _, feature := range features {
@@ -104,7 +104,7 @@ func (st *SimhashT) VectorizeBytes(features [][]byte) Vector {
 // The fingerprint f of a given 64-dimension vector v is defined as follows:
 //   f[i] = 1 if v[i] >= 0
 //   f[i] = 0 if v[i] < 0
-func (st *SimhashT) Fingerprint(v Vector) uint64 {
+func (st *SimhashBase) Fingerprint(v Vector) uint64 {
 	var f uint64
 	for i := uint8(0); i < 64; i++ {
 		if v[i] >= 0 {
@@ -159,12 +159,12 @@ func Compare(a uint64, b uint64) uint8 {
 }
 
 // GetSimhash returns a 64-bit simhash of the given feature set
-func (st *SimhashT) GetSimhash(fs FeatureSet) uint64 {
+func (st *SimhashBase) GetSimhash(fs FeatureSet) uint64 {
 	return st.Fingerprint(st.Vectorize(fs.GetFeatures()))
 }
 
 // Returns a 64-bit simhash of the given bytes
-func (st *SimhashT) SimhashBytes(b [][]byte) uint64 {
+func (st *SimhashBase) SimhashBytes(b [][]byte) uint64 {
 	return st.Fingerprint(st.VectorizeBytes(b))
 }
 
@@ -174,7 +174,7 @@ type WordFeatureSet struct {
 	B []byte
 }
 
-func (st *SimhashT) NewWordFeatureSet(b []byte) *WordFeatureSet {
+func (st *SimhashBase) NewWordFeatureSet(b []byte) *WordFeatureSet {
 	fs := &WordFeatureSet{b}
 	fs.Normalize()
 	return fs
@@ -204,7 +204,7 @@ func DoGetFeatures(b []byte, r *regexp.Regexp) []Feature {
 
 // Shingle returns the w-shingling of the given set of bytes. For example, if the given
 // input was {"this", "is", "a", "test"}, this returns {"this is", "is a", "a test"}
-func (st *SimhashT) Shingle(w int, b [][]byte) [][]byte {
+func (st *SimhashBase) Shingle(w int, b [][]byte) [][]byte {
 	if w < 1 {
 		// TODO: use error here instead of panic?
 		panic("simhash.Shingle(): k must be a positive integer")

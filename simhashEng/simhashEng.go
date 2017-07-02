@@ -7,14 +7,14 @@ import (
 ////////////////////////////////////////////////////////////////////////////
 // Data type/structure definitions
 
-type SimhashEngT struct {
-	simhash.SimhashT
+type SimhashEng struct {
+	simhash.SimhashBase
 }
 
 ////////////////////////////////////////////////////////////////////////////
 // Function definitions
 
 // NewSimhash makes a new Simhash
-func NewSimhash() *SimhashEngT {
-	return &SimhashEngT{}
+func NewSimhash() *SimhashEng {
+	return &SimhashEng{}
 }
