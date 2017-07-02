@@ -80,14 +80,16 @@ Duis vehicula ante commodo ipsum bibendum lacinia. Vestibulum id sapien sit amet
 Vivamus commodo eros eget neque pharetra euismod. Cras sed elit odio. Proin libero diam, interdum et vulputate vel, egestas sit amet justo. Proin purus metus, mollis ut laoreet ut, varius sit amet mi. Etiam consequat nullam.
 `)
 
+var sh *SimhashBase
 var fs *WordFeatureSet
 var v Vector
 var f []Feature
 var w [][]byte
 
 func init() {
-	fs = NewWordFeatureSet(testString)
-	v = Vectorize(fs.GetFeatures())
+	sh = NewSimhash()
+	fs = sh.NewWordFeatureSet(testString)
+	v = sh.Vectorize(fs.GetFeatures())
 	f = fs.GetFeatures()
 	w = boundaries.FindAll(testString, -1)
 }
@@ -100,36 +102,36 @@ func BenchmarkWordFeatureSetGetFeatures(b *testing.B) {
 
 func BenchmarkVectorize(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Vectorize(f)
+		sh.Vectorize(f)
 	}
 }
 
 func BenchmarkVectorizeBytes(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		VectorizeBytes(w)
+		sh.VectorizeBytes(w)
 	}
 }
 
 func BenchmarkFingerprint(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Fingerprint(v)
+		sh.Fingerprint(v)
 	}
 }
 
 func BenchmarkSimhash(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Simhash(&WordFeatureSet{testString})
+		sh.GetSimhash(&WordFeatureSet{testString})
 	}
 }
 
 func BenchmarkSimhashBytes(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		SimhashBytes(w)
+		sh.SimhashBytes(w)
 	}
 }
 
 func BenchmarkShingle(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Shingle(3, w)
+		sh.Shingle(3, w)
 	}
 }
