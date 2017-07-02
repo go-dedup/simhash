@@ -9,20 +9,9 @@ import (
 	"github.com/go-dedup/simhash/simhashEng"
 )
 
-// to show the full code in GoDoc
-type dummy struct {
-}
-
 // for standalone test, change package to `main` and the next func def to,
 // func main() {
 func Example_output() {
-	var docs = [][]byte{
-		[]byte("this is a test phrase"),
-		[]byte("this is a test phrass"),
-		[]byte("these are test phrases"),
-		[]byte("foo bar"),
-	}
-
 	hashes := make([]uint64, len(docs))
 	sh := simhashEng.NewSimhash()
 	for i, d := range docs {
@@ -42,5 +31,11 @@ func Example_output() {
 	// Comparison of `this is a test phrase` and `this is a test phrass`: 2
 	// Comparison of `this is a test phrase` and `these are test phrases`: 22
 	// Comparison of `this is a test phrase` and `foo bar`: 29
+}
 
+var docs = [][]byte{
+	[]byte("this is a test phrase"),
+	[]byte("this is a test phrass"),
+	[]byte("these are test phrases"),
+	[]byte("foo bar"),
 }

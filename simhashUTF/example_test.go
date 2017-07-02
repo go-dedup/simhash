@@ -10,20 +10,9 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
-// to show the full code in GoDoc
-type dummy struct {
-}
-
 // for standalone test, change package to `main` and the next func def to,
 // func main() {
 func Example_output() {
-	var docs = [][]byte{
-		[]byte("la fin d'un bel après-midi d'été"),
-		[]byte("bonne après-midi"),
-		[]byte("Bonjour"),
-		[]byte("Bonsoir"),
-	}
-
 	hashes := make([]uint64, len(docs))
 	sh := simhashUTF.NewUTFSimhash(norm.NFKC)
 	for i, d := range docs {
@@ -43,4 +32,11 @@ func Example_output() {
 	// Comparison of `la fin d'un bel après-midi d'été` and `bonne après-midi`: 18
 	// Comparison of `la fin d'un bel après-midi d'été` and `Bonjour`: 28
 	// Comparison of `la fin d'un bel après-midi d'été` and `Bonsoir`: 34
+}
+
+var docs = [][]byte{
+	[]byte("la fin d'un bel après-midi d'été"),
+	[]byte("bonne après-midi"),
+	[]byte("Bonjour"),
+	[]byte("Bonsoir"),
 }
