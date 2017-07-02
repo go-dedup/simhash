@@ -5,6 +5,7 @@ package simhashUTF_test
 import (
 	"fmt"
 
+	"github.com/go-dedup/simhash"
 	"github.com/go-dedup/simhash/simhashUTF"
 	"golang.org/x/text/unicode/norm"
 )
@@ -30,9 +31,9 @@ func Example_output() {
 		fmt.Printf("Simhash of '%s': %x\n", d, hashes[i])
 	}
 
-	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[1], sh.Compare(hashes[0], hashes[1]))
-	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[2], sh.Compare(hashes[0], hashes[2]))
-	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[3], sh.Compare(hashes[0], hashes[3]))
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[1], simhash.Compare(hashes[0], hashes[1]))
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[2], simhash.Compare(hashes[0], hashes[2]))
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[3], simhash.Compare(hashes[0], hashes[3]))
 
 	// Output:
 	// Simhash of 'la fin d'un bel après-midi d'été': 58dbbd1fefab774a

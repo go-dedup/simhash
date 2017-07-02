@@ -5,6 +5,7 @@ package simhashEng_test
 import (
 	"fmt"
 
+	"github.com/go-dedup/simhash"
 	"github.com/go-dedup/simhash/simhashEng"
 )
 
@@ -29,9 +30,9 @@ func Example_output() {
 		fmt.Printf("Simhash of '%s': %x\n", d, hashes[i])
 	}
 
-	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[1], sh.Compare(hashes[0], hashes[1]))
-	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[2], sh.Compare(hashes[0], hashes[2]))
-	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[3], sh.Compare(hashes[0], hashes[3]))
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[1], simhash.Compare(hashes[0], hashes[1]))
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[2], simhash.Compare(hashes[0], hashes[2]))
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[3], simhash.Compare(hashes[0], hashes[3]))
 
 	// Output:
 	// Simhash of 'this is a test phrase': 8c3a5f7e9ecb3f35

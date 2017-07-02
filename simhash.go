@@ -21,7 +21,6 @@ type Simhash interface {
 	Vectorize(features []Feature) Vector
 	VectorizeBytes(features [][]byte) Vector
 	Fingerprint(v Vector) uint64
-	Compare(a uint64, b uint64) uint8
 	GetSimhash(fs FeatureSet) uint64
 	SimhashBytes(b [][]byte) uint64
 	NewWordFeatureSet(b []byte) *WordFeatureSet
@@ -150,7 +149,7 @@ func NewFeatureWithWeight(f []byte, weight int) feature {
 // exist which may be more efficient and are worth exploring at some point
 //
 // [1] http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetKernighan
-func (st *SimhashT) Compare(a uint64, b uint64) uint8 {
+func Compare(a uint64, b uint64) uint8 {
 	v := a ^ b
 	var c uint8
 	for c = 0; v != 0; c++ {
