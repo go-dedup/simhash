@@ -2,11 +2,15 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package html-distance is a go library for computing the proximity of the HTML pages. The implementation similiarity fingerprint is Charikar's simhash.
+// Package sho (meaning "SimHash Oracle") is to check if a fingerprint is similar to existing ones. It uses BK Tree (Burkhard and Keller) for storing and verifying if a fingerprint is closed to a set of fingerprint within a defined proximity distance.
+
+// it is forked from from Yahoo Inc's github.com/yahoo/gryffin/html-distance, which was meant to be a go library for computing the proximity of the HTML pages. The implementation similiarity fingerprint is Charikar's simhash.
 //
-// Distance is the hamming distance of the fingerprints. Since fingerprint is of size 64 (inherited from hash/fnv), Similiarity is defined as 1 - d / 64.
-//
-// In normal scenario, similarity > 95% (i.e. d<3) could be considered as duplicated html pages.
+// Distance is the hamming distance of the fingerprints. It's plan was:
+
+// - Since fingerprint is of size 64 (inherited from hash/fnv), Similiarity is defined as 1 - d / 64.
+// - In normal scenario, similarity > 95% (i.e. d<3) could be considered as duplicated html pages.
+
 // sho -- SimHash Oracle
 package sho
 
