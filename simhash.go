@@ -14,8 +14,6 @@ import (
 	"bytes"
 	"hash/fnv"
 	"regexp"
-
-	"golang.org/x/text/unicode/norm"
 )
 
 type Simhash interface {
@@ -27,7 +25,6 @@ type Simhash interface {
 	GetSimhash(fs FeatureSet) uint64
 	SimhashBytes(b [][]byte) uint64
 	NewWordFeatureSet(b []byte) *WordFeatureSet
-	NewUnicodeWordFeatureSet(b []byte, f norm.Form) *UnicodeWordFeatureSet
 	Shingle(w int, b [][]byte) [][]byte
 }
 
@@ -175,56 +172,29 @@ func (st *SimhashT) SimhashBytes(b [][]byte) uint64 {
 // WordFeatureSet is a feature set in which each word is a feature,
 // all equal weight.
 type WordFeatureSet struct {
-	b []byte
+	B []byte
 }
 
 func (st *SimhashT) NewWordFeatureSet(b []byte) *WordFeatureSet {
 	fs := &WordFeatureSet{b}
-	fs.normalize()
+	fs.Normalize()
 	return fs
 }
 
-func (w *WordFeatureSet) normalize() {
-	w.b = bytes.ToLower(w.b)
+func (w *WordFeatureSet) Normalize() {
+	w.B = bytes.ToLower(w.B)
 }
 
 var boundaries = regexp.MustCompile(`[\w']+(?:\://[\w\./]+){0,1}`)
-var unicodeBoundaries = regexp.MustCompile(`[\pL-_']+`)
 
 // Returns a []Feature representing each word in the byte slice
 func (w *WordFeatureSet) GetFeatures() []Feature {
-	return getFeatures(w.b, boundaries)
-}
-
-// UnicodeWordFeatureSet is a feature set in which each word is a feature,
-// all equal weight.
-//
-// See: http://blog.golang.org/normalization
-// See: https://groups.google.com/forum/#!topic/golang-nuts/YyH1f_qCZVc
-type UnicodeWordFeatureSet struct {
-	b []byte
-	f norm.Form
-}
-
-func (st *SimhashT) NewUnicodeWordFeatureSet(b []byte, f norm.Form) *UnicodeWordFeatureSet {
-	fs := &UnicodeWordFeatureSet{b, f}
-	fs.normalize()
-	return fs
-}
-
-func (w *UnicodeWordFeatureSet) normalize() {
-	b := bytes.ToLower(w.f.Append(nil, w.b...))
-	w.b = b
-}
-
-// Returns a []Feature representing each word in the byte slice
-func (w *UnicodeWordFeatureSet) GetFeatures() []Feature {
-	return getFeatures(w.b, unicodeBoundaries)
+	return DoGetFeatures(w.B, boundaries)
 }
 
 // Splits the given []byte using the given regexp, then returns a slice
 // containing a Feature constructed from each piece matched by the regexp
-func getFeatures(b []byte, r *regexp.Regexp) []Feature {
+func DoGetFeatures(b []byte, r *regexp.Regexp) []Feature {
 	words := r.FindAll(b, -1)
 	features := make([]Feature, len(words))
 	for i, w := range words {

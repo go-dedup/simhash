@@ -117,11 +117,11 @@ func ExampleNewUnicodeWordFeatureSet_inChinese() {
 }
 
 func TestGetFeatures(t *testing.T) {
-	actual := getFeatures([]byte("test string"), boundaries)
+	actual := DoGetFeatures([]byte("test string"), boundaries)
 	expected := []Feature{NewFeature([]byte("test")), NewFeature([]byte("string"))}
 
 	if len(actual) != len(expected) {
-		t.Errorf("getFeatures returned wrong number of features")
+		t.Errorf("DoGetFeatures returned wrong number of features")
 	}
 
 	for i := 0; i < len(actual); i++ {
