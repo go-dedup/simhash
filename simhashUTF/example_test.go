@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/go-dedup/simhash/simhashUTF"
+	"golang.org/x/text/unicode/norm"
 )
 
 // to show the full code in GoDoc
@@ -16,16 +17,16 @@ type dummy struct {
 // func main() {
 func Example_output() {
 	var docs = [][]byte{
-		[]byte("this is a test phrase"),
-		[]byte("this is a test phrass"),
-		[]byte("these are test phrases"),
-		[]byte("foo bar"),
+		[]byte("la fin d'un bel après-midi d'été"),
+		[]byte("bonne après-midi"),
+		[]byte("Bonjour"),
+		[]byte("Bonsoir"),
 	}
 
 	hashes := make([]uint64, len(docs))
 	sh := simhashUTF.NewSimhash()
 	for i, d := range docs {
-		hashes[i] = sh.GetSimhash(sh.NewWordFeatureSet(d))
+		hashes[i] = sh.GetSimhash(sh.NewUnicodeWordFeatureSet(d, norm.NFKC))
 		fmt.Printf("Simhash of '%s': %x\n", d, hashes[i])
 	}
 
@@ -34,12 +35,11 @@ func Example_output() {
 	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[3], sh.Compare(hashes[0], hashes[3]))
 
 	// Output:
-	// Simhash of 'this is a test phrase': 8c3a5f7e9ecb3f35
-	// Simhash of 'this is a test phrass': 8c3a5f7e9ecb3f21
-	// Simhash of 'these are test phrases': ddfdbf7fbfaffb1d
-	// Simhash of 'foo bar': d8dbe7186bad3db3
-	// Comparison of `this is a test phrase` and `this is a test phrass`: 2
-	// Comparison of `this is a test phrase` and `these are test phrases`: 22
-	// Comparison of `this is a test phrase` and `foo bar`: 29
-
+	// Simhash of 'la fin d'un bel après-midi d'été': 58dbbd1fefab774a
+	// Simhash of 'bonne après-midi': fadfbfbfdf8e7b7f
+	// Simhash of 'Bonjour': ac5261af4fdd5252
+	// Simhash of 'Bonsoir': fb42ceaf7cda4905
+	// Comparison of `la fin d'un bel après-midi d'été` and `bonne après-midi`: 18
+	// Comparison of `la fin d'un bel après-midi d'été` and `Bonjour`: 28
+	// Comparison of `la fin d'un bel après-midi d'été` and `Bonsoir`: 34
 }
