@@ -10,18 +10,20 @@ import (
 
 func TestEmpty(t *testing.T) {
 	var empty Vector
-	v := Vectorize([]Feature{})
+	sh := NewSimhash()
+	v := sh.Vectorize([]Feature{})
 	if v != empty {
 		t.Errorf("Expected empty vector for no features")
 	}
 }
 
 func TestVectorize(t *testing.T) {
+	sh := NewSimhash()
 	features := []Feature{
 		NewFeature([]byte("test string")),
 		NewFeature([]byte("test thing")),
 	}
-	v := Vectorize(features)
+	v := sh.Vectorize(features)
 	expected := Vector{0, -2, 0, 0, -2, -2, -2, 0, 0, 0, -2, 0, 0, 0, -2, 0, -2, 0, 0, 0, 0, 0, 2, 2, 2, -2, 0, -2, 0, -2, 2, 0, 0, 2, 0, 2, -2, 0, 2, 0, 2, -2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 2, 0, 0, 2, -2, -2, 2, -2, 0, 2, 0, 2, -2}
 
 	if v != expected {
@@ -30,11 +32,12 @@ func TestVectorize(t *testing.T) {
 }
 
 func TestVectorizeBytes(t *testing.T) {
+	sh := NewSimhash()
 	features := [][]byte{
 		[]byte("test string"),
 		[]byte("test thing"),
 	}
-	v := VectorizeBytes(features)
+	v := sh.VectorizeBytes(features)
 	expected := Vector{0, -2, 0, 0, -2, -2, -2, 0, 0, 0, -2, 0, 0, 0, -2, 0, -2, 0, 0, 0, 0, 0, 2, 2, 2, -2, 0, -2, 0, -2, 2, 0, 0, 2, 0, 2, -2, 0, 2, 0, 2, -2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 2, 0, 0, 2, -2, -2, 2, -2, 0, 2, 0, 2, -2}
 
 	if v != expected {

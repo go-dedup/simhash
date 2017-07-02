@@ -10,10 +10,11 @@ import (
 )
 
 func TestSimhash(t *testing.T) {
+	sh := NewSimhash()
 	var fp = []uint64{
-		Simhash(&WordFeatureSet{[]byte("this is a test phrase")}),
-		Simhash(&WordFeatureSet{[]byte("this is a test phrass")}),
-		Simhash(&WordFeatureSet{[]byte("foo bar")}),
+		sh.GetSimhash(&WordFeatureSet{[]byte("this is a test phrase")}),
+		sh.GetSimhash(&WordFeatureSet{[]byte("this is a test phrass")}),
+		sh.GetSimhash(&WordFeatureSet{[]byte("foo bar")}),
 	}
 
 	if Compare(fp[0], fp[1]) != 2 {
@@ -47,8 +48,9 @@ var shingleTests = []struct {
 }
 
 func TestShingle(t *testing.T) {
+	sh := NewSimhash()
 	for _, tt := range shingleTests {
-		actual := Shingle(tt.w, tt.words)
+		actual := sh.Shingle(tt.w, tt.words)
 		if !equal(actual, tt.expected) {
 			t.Errorf("Shingle(%d, %v): expected %v, got %v", tt.w, tt.words, tt.expected, actual)
 		}

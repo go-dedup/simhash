@@ -108,9 +108,10 @@ func Example_output() {
 	// Code starts
 
 	oracle := sho.NewOracle()
+	sh := simhash.NewSimhash()
 	r := uint8(3)
 	for _, d := range docs {
-		hash := simhash.Simhash(simhash.NewWordFeatureSet(d))
+		hash := sh.GetSimhash(sh.NewWordFeatureSet(d))
 		if oracle.Seen(hash, r) {
 			fmt.Printf("=: Simhash of %x for '%s' ignored.\n", hash, d)
 		} else {
