@@ -12,10 +12,27 @@ package simhash
 
 import (
 	"bytes"
-	"golang.org/x/text/unicode/norm"
 	"hash/fnv"
 	"regexp"
+
+	"golang.org/x/text/unicode/norm"
 )
+
+type Simhash interface {
+	NewSimhash() *Simhash
+	Vectorize(features []Feature) Vector
+	VectorizeBytes(features [][]byte) Vector
+	Fingerprint(v Vector) uint64
+	Compare(a uint64, b uint64) uint8
+	GetSimhash(fs FeatureSet) uint64
+	SimhashBytes(b [][]byte) uint64
+	NewWordFeatureSet(b []byte) *WordFeatureSet
+	NewUnicodeWordFeatureSet(b []byte, f norm.Form) *UnicodeWordFeatureSet
+	Shingle(w int, b [][]byte) [][]byte
+}
+
+type SimhashT struct {
+}
 
 type Vector [64]int
 
@@ -33,11 +50,19 @@ type FeatureSet interface {
 	GetFeatures() []Feature
 }
 
+////////////////////////////////////////////////////////////////////////////
+// Function definitions
+
+// NewSimhash makes a new Simhash
+func NewSimhash() *SimhashT {
+	return &SimhashT{}
+}
+
 // Vectorize generates 64 dimension vectors given a set of features.
 // Vectors are initialized to zero. The i-th element of the vector is then
 // incremented by weight of the i-th feature if the i-th bit of the feature
 // is set, and decremented by the weight of the i-th feature otherwise.
-func Vectorize(features []Feature) Vector {
+func (st *SimhashT) Vectorize(features []Feature) Vector {
 	var v Vector
 	for _, feature := range features {
 		sum := feature.Sum()
@@ -60,7 +85,7 @@ func Vectorize(features []Feature) Vector {
 // Vectors are initialized to zero. The i-th element of the vector is then
 // incremented by weight of the i-th feature if the i-th bit of the feature
 // is set, and decremented by the weight of the i-th feature otherwise.
-func VectorizeBytes(features [][]byte) Vector {
+func (st *SimhashT) VectorizeBytes(features [][]byte) Vector {
 	var v Vector
 	h := fnv.New64()
 	for _, feature := range features {
@@ -83,7 +108,7 @@ func VectorizeBytes(features [][]byte) Vector {
 // The fingerprint f of a given 64-dimension vector v is defined as follows:
 //   f[i] = 1 if v[i] >= 0
 //   f[i] = 0 if v[i] < 0
-func Fingerprint(v Vector) uint64 {
+func (st *SimhashT) Fingerprint(v Vector) uint64 {
 	var f uint64
 	for i := uint8(0); i < 64; i++ {
 		if v[i] >= 0 {
@@ -128,7 +153,7 @@ func NewFeatureWithWeight(f []byte, weight int) feature {
 // exist which may be more efficient and are worth exploring at some point
 //
 // [1] http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetKernighan
-func Compare(a uint64, b uint64) uint8 {
+func (st *SimhashT) Compare(a uint64, b uint64) uint8 {
 	v := a ^ b
 	var c uint8
 	for c = 0; v != 0; c++ {
@@ -137,14 +162,14 @@ func Compare(a uint64, b uint64) uint8 {
 	return c
 }
 
-// Returns a 64-bit simhash of the given feature set
-func Simhash(fs FeatureSet) uint64 {
-	return Fingerprint(Vectorize(fs.GetFeatures()))
+// GetSimhash returns a 64-bit simhash of the given feature set
+func (st *SimhashT) GetSimhash(fs FeatureSet) uint64 {
+	return st.Fingerprint(st.Vectorize(fs.GetFeatures()))
 }
 
 // Returns a 64-bit simhash of the given bytes
-func SimhashBytes(b [][]byte) uint64 {
-	return Fingerprint(VectorizeBytes(b))
+func (st *SimhashT) SimhashBytes(b [][]byte) uint64 {
+	return st.Fingerprint(st.VectorizeBytes(b))
 }
 
 // WordFeatureSet is a feature set in which each word is a feature,
@@ -153,7 +178,7 @@ type WordFeatureSet struct {
 	b []byte
 }
 
-func NewWordFeatureSet(b []byte) *WordFeatureSet {
+func (st *SimhashT) NewWordFeatureSet(b []byte) *WordFeatureSet {
 	fs := &WordFeatureSet{b}
 	fs.normalize()
 	return fs
@@ -181,7 +206,7 @@ type UnicodeWordFeatureSet struct {
 	f norm.Form
 }
 
-func NewUnicodeWordFeatureSet(b []byte, f norm.Form) *UnicodeWordFeatureSet {
+func (st *SimhashT) NewUnicodeWordFeatureSet(b []byte, f norm.Form) *UnicodeWordFeatureSet {
 	fs := &UnicodeWordFeatureSet{b, f}
 	fs.normalize()
 	return fs
@@ -210,7 +235,7 @@ func getFeatures(b []byte, r *regexp.Regexp) []Feature {
 
 // Shingle returns the w-shingling of the given set of bytes. For example, if the given
 // input was {"this", "is", "a", "test"}, this returns {"this is", "is a", "a test"}
-func Shingle(w int, b [][]byte) [][]byte {
+func (st *SimhashT) Shingle(w int, b [][]byte) [][]byte {
 	if w < 1 {
 		// TODO: use error here instead of panic?
 		panic("simhash.Shingle(): k must be a positive integer")
