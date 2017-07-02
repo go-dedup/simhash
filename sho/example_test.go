@@ -7,6 +7,10 @@ import (
 	"github.com/go-dedup/simhash/sho"
 )
 
+// to show the full code in GoDoc
+type dummy struct {
+}
+
 // for standalone test, change package to `main` and the next func def to,
 // func main() {
 func Example_output() {
