@@ -24,9 +24,9 @@ func Example_output() {
 	}
 
 	hashes := make([]uint64, len(docs))
-	sh := simhashUTF.NewSimhash()
+	sh := simhashUTF.NewUTFSimhash(norm.NFKC)
 	for i, d := range docs {
-		hashes[i] = sh.GetSimhash(sh.NewUnicodeWordFeatureSet(d, norm.NFKC))
+		hashes[i] = sh.GetSimhash(sh.NewWordFeatureSet(d))
 		fmt.Printf("Simhash of '%s': %x\n", d, hashes[i])
 	}
 

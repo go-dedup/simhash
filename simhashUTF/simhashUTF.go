@@ -29,6 +29,11 @@ func NewSimhash() *SimhashUTFT {
 	return &SimhashUTFT{}
 }
 
+// NewUTFSimhash makes a new SimhashUTF
+func NewUTFSimhash(_f norm.Form) *SimhashUTFT {
+	return &SimhashUTFT{f: _f}
+}
+
 // UnicodeWordFeatureSet is a feature set in which each word is a feature,
 // all equal weight.
 //
@@ -39,10 +44,8 @@ type UnicodeWordFeatureSet struct {
 	f norm.Form
 }
 
-func (st *SimhashUTFT) NewWordFeatureSet(b []byte) *simhash.WordFeatureSet {
-	fs := &simhash.WordFeatureSet{b}
-	fs.Normalize()
-	return fs
+func (st *SimhashUTFT) NewWordFeatureSet(b []byte) *UnicodeWordFeatureSet {
+	return st.NewUnicodeWordFeatureSet(b, st.f)
 }
 
 func (st *SimhashUTFT) NewUnicodeWordFeatureSet(b []byte, f norm.Form) *UnicodeWordFeatureSet {
