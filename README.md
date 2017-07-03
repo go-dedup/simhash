@@ -8,12 +8,15 @@
 
 ## TOC
 - [simhash - Go simhash package](#simhash---go-simhash-package)
+  - [Design principle](#design-principle)
 - [Installation](#installation)
 - [Usage](#usage)
 - [API](#api)
   - [> example_test.go](#-example_testgo)
-- [TODO](#todo)
-  - [> chinese_test.go](#-chinese_testgo)
+- [Purpose](#purpose)
+- [Versions](#versions)
+  - [> simhashUTF/chinese_test.go](#-simhashutfchinese_testgo)
+  - [> simhashCJK/example_test.go](#-simhashcjkexample_testgo)
 - [Credits](#credits)
 - [Similar Projects](#similar-projects)
 
@@ -28,6 +31,12 @@ documents will be small.
 This package only implements the simhash algorithm. To make use of this
 package to enable quickly identifying near-duplicate documents within a large collection of
 documents, check out the `sho` (SimHash Oracle) package at [github.com/go-dedup/simhash/sho](https://github.com/go-dedup/simhash/tree/master/sho). It has a simple [API](https://github.com/go-dedup/simhash/tree/master/sho#api) that is easy to use. 
+
+### Design principle
+
+The design principle of these packages follows the ["Unix philosophy"](https://en.wikipedia.org/wiki/Unix_philosophy): "_Do One Thing and Do It Well_". Thus the storing & checking, and different language handling are available in different building blocks, and can be added on request, or substituted at will, keeping the size of the core code minimum.
+
+Thus, you can use exactly what you want to use without being forced to accept a huge package with features you don't want.
 
 # Installation
 
@@ -48,6 +57,8 @@ Example usage:
 
 #### > example_test.go
 ```go
+//package main
+
 package simhash_test
 
 import (
@@ -56,19 +67,13 @@ import (
 	"github.com/go-dedup/simhash"
 )
 
-// for standalone test, change package to main and the next func def to,
+// for standalone test, change package to `main` and the next func def to,
 // func main() {
 func Example_output() {
-	var docs = [][]byte{
-		[]byte("this is a test phrase"),
-		[]byte("this is a test phrass"),
-		[]byte("these are test phrases"),
-		[]byte("foo bar"),
-	}
-
 	hashes := make([]uint64, len(docs))
+	sh := simhash.NewSimhash()
 	for i, d := range docs {
-		hashes[i] = simhash.Simhash(simhash.NewWordFeatureSet(d))
+		hashes[i] = sh.GetSimhash(sh.NewWordFeatureSet(d))
 		fmt.Printf("Simhash of '%s': %x\n", d, hashes[i])
 	}
 
@@ -84,25 +89,62 @@ func Example_output() {
 	// Comparison of `this is a test phrase` and `this is a test phrass`: 2
 	// Comparison of `this is a test phrase` and `these are test phrases`: 22
 	// Comparison of `this is a test phrase` and `foo bar`: 29
+}
 
+var docs = [][]byte{
+	[]byte("this is a test phrase"),
+	[]byte("this is a test phrass"),
+	[]byte("these are test phrases"),
+	[]byte("foo bar"),
 }
 ```
 
 All patches welcome.
 
-# TODO
+# Purpose
 
-It does not support Chinese very well:
+A few more words on the similarity checking and near-duplicate detection. The best article I found explaining it clearly is:
 
-#### > chinese_test.go
+**Near-Duplicate Detection**  
+https://moz.com/devblog/near-duplicate-detection/
+
+This article, from the Moz Developer Blog, explained in details and in graph that,
+
+- Why Does Duplication Matter
+- What to Do About It, and
+- How to Identify Duplication
+
+and it went on to explain the different algorithms to do so.
+
+Among the algorithms that solve the problem the best, one is `MinHash`, which is [the first that I tried](https://github.com/go-dedup/deduper), but found it to be bloated, cumbersome to use, and not working as I expected. The other one is `SimHash`, which is what all these are about. `SimHash` is designed by Google. It is simple, straightforward, thus very efficient and powerful. I like it very much, and should have used it in the first place.
+
+FYI, [this is why I needed and looked for such similarity checking and near-duplicate detection algorithms in the first place](http://godoc.org/github.com/go-dedup/simhash/sho#example-package--Output) -- in the world that we cannot avoid the rule-breakers and spammers, at least we can use technologies to get rid of them for ourselves.
+
+# Versions
+
+Having forked from [mfonda/simhash](https://github.com/mfonda/simhash), `go-dedup/simhash` has been through a serious of interface changes. Detailed documents of such changes, and the reasons behind it, also how to use the original (v1) design API [can be found here](https://github.com/go-dedup/simhash/wiki/Version-2). 
+
+The key characteristics of current design are,
+
+- most of `simhash` related functions are provided as method(/member) functions of `SimhashBase` type(/class), as oppose to package functions before.
+- and also very importantly, the `UnicodeWordFeatureSet` related functions no longer exist in core code any more, because
+- the language-specific handling have been refactored out to a thin language handling layer.
+- the goal of version 2 is to have different languages to have a unified user interface (API).
+
+Such modular approach (v2 design) helps to reduce and limit the size of the core code, while make it easy to extend the core function with easy to use building blocks.
+
+The added bonus is that, the original (v1) design does not support Chinese very well:
+
+#### > simhashUTF/chinese_test.go
 ```go
-package simhash_test
+package simhashUTF_test
 
 import (
 	"fmt"
 
 	"github.com/go-dedup/simhash"
 	"github.com/go-dedup/simhash/sho"
+	"github.com/go-dedup/simhash/simhashUTF"
 
 	"golang.org/x/text/unicode/norm"
 )
@@ -123,8 +165,9 @@ func Example_Chinese_output() {
 	oracle := sho.NewOracle()
 	r := uint8(3)
 	hashes := make([]uint64, len(docs))
+	sh := simhashUTF.NewUTFSimhash(norm.NFKC)
 	for i, d := range docs {
-		hashes[i] = simhash.Simhash(simhash.NewUnicodeWordFeatureSet(d, norm.NFC))
+		hashes[i] = sh.GetSimhash(sh.NewUnicodeWordFeatureSet(d, norm.NFC))
 		hash := hashes[i]
 		if oracle.Seen(hash, r) {
 			fmt.Printf("=: Simhash of %x for '%s' ignored.\n", hash, d)
@@ -155,7 +198,58 @@ func Example_Chinese_output() {
 }
 ```
 
-All patches welcome.
+[The result of similarity checking on Chinese text is very bad](https://github.com/go-dedup/simhash/blob/master/simhashUTF/chinese_test.go#L55-L58). But thanks to version 2's architecture, it is very easy to extend `simhash` to deal with Chinese:
+
+#### > simhashCJK/example_test.go
+```go
+// package main
+
+package simhashCJK_test
+
+import (
+	"fmt"
+
+	"github.com/go-dedup/simhash"
+	"github.com/go-dedup/simhash/simhashCJK"
+)
+
+// for standalone test, change package to `main` and the next func def to,
+// func main() {
+func Example_output() {
+	hashes := make([]uint64, len(docs))
+	sh := simhashCJK.NewSimhash()
+	for i, d := range docs {
+		fs := sh.NewWordFeatureSet(d)
+		// fmt.Printf("%#v\n", fs)
+		// actual := fs.GetFeatures()
+		// fmt.Printf("%#v\n", actual)
+		hashes[i] = sh.GetSimhash(fs)
+		fmt.Printf("Simhash of '%s': %x\n", d, hashes[i])
+	}
+
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[1], simhash.Compare(hashes[0], hashes[1]))
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[2], simhash.Compare(hashes[0], hashes[2]))
+	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[3], simhash.Compare(hashes[0], hashes[3]))
+
+	// Output:
+	// Simhash of '当山峰没有棱角的时候': d7185f186a2eea5a
+	// Simhash of '当山谷没有棱角的时候': d71a5f186a2eea5a
+	// Simhash of '棱角的时候': d71a5f186a2ffa52
+	// Simhash of '你妈妈喊你回家吃饭哦，回家罗回家罗': d71bf7186a32b9f0
+	// Comparison of `当山峰没有棱角的时候` and `当山谷没有棱角的时候`: 1
+	// Comparison of `当山峰没有棱角的时候` and `棱角的时候`: 4
+	// Comparison of `当山峰没有棱角的时候` and `你妈妈喊你回家吃饭哦，回家罗回家罗`: 16
+}
+
+var docs = [][]byte{
+	[]byte("当山峰没有棱角的时候"),
+	[]byte("当山谷没有棱角的时候"),
+	[]byte("棱角的时候"),
+	[]byte("你妈妈喊你回家吃饭哦，回家罗回家罗"),
+}
+```
+
+With the above, now the problem has been fix. [Check the result here](https://github.com/go-dedup/simhash/blob/master/simhashCJK/example_test.go#L35-L37).
 
 ## Credits
 
