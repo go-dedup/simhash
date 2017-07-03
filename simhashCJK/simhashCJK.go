@@ -1,3 +1,13 @@
+////////////////////////////////////////////////////////////////////////////
+// Package: simhashCJK
+// Purpose: simhash language-specific handling for CJK
+// Authors: Tong Sun (c) 2017, All rights reserved
+////////////////////////////////////////////////////////////////////////////
+
+// simhashCJK -- simhash language-specific handling for CJK.
+//
+// This package is provided to showcase how easy it is to extend the simhash's language-specific handling functionality, even when CJK handling is dramatically different than Western Unicode handling.
+//
 package simhashCJK
 
 import "github.com/go-dedup/simhash"

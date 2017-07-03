@@ -1,3 +1,13 @@
+////////////////////////////////////////////////////////////////////////////
+// Package: simhashEng
+// Purpose: simhash language-specific handling for English
+// Authors: Tong Sun (c) 2017, All rights reserved
+////////////////////////////////////////////////////////////////////////////
+
+// simhashEng -- simhash language-specific handling for English.
+//
+// This package is provided to showcase how easy it is to extend the simhash's language-specific handling functionality.
+//
 package simhashEng
 
 import (

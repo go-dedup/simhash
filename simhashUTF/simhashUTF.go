@@ -1,3 +1,20 @@
+////////////////////////////////////////////////////////////////////////////
+// Package: simhashUTF
+// Purpose: simhash language-specific handling for UTF
+// Authors: Tong Sun (c) 2017, All rights reserved
+//          Matthew Fonda (c) 2013, All rights reserved
+////////////////////////////////////////////////////////////////////////////
+
+// Copyright 2013 Matthew Fonda. All rights reserved.
+// Use of this source code is governed by the MIT
+// license that can be found in the LICENSE file.
+
+// simhashUTF -- simhash language-specific handling for UTF.
+//
+// This package is to refactor the Unicode handling code from the original (v1) design out to this thin language handling layer, which showcases how easy it is to extend the simhash's language-specific handling functionality.
+//
+// Such modular approach (v2 design) helps to reduce and limit the size of the core code, while make it easy to extend the core function as well.
+//
 package simhashUTF
 
 import (
