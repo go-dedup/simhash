@@ -37,7 +37,7 @@ func TestUnicodeWordFeatureSet(t *testing.T) {
 	}
 }
 
-func ExampleNewUnicodeWordFeatureSet_inWestern() {
+func ExampleUnicodeWordFeatureSet_NewUnicodeWordFeatureSet_inWestern() {
 	sh := NewSimhash()
 	text := []byte("la fin d'un bel après-midi d'été")
 	fs := sh.NewUnicodeWordFeatureSet(text, norm.NFKC)
@@ -49,7 +49,7 @@ func ExampleNewUnicodeWordFeatureSet_inWestern() {
 	// []simhash.Feature{simhash.feature{sum:0x8325c07b4eb2548, weight:1}, simhash.feature{sum:0xd8cbc5186ba13198, weight:1}, simhash.feature{sum:0x15cdbd7eed98cfab, weight:1}, simhash.feature{sum:0xd8d9a1186bad324a, weight:1}, simhash.feature{sum:0x3adb901f8c8a7b5e, weight:1}, simhash.feature{sum:0x7e8f29c36ffb774e, weight:1}}
 }
 
-func ExampleNewUnicodeWordFeatureSet_inChinese() {
+func ExampleUnicodeWordFeatureSet_NewUnicodeWordFeatureSet_inChinese() {
 	sh := NewSimhash()
 	text := []byte("当山峰没有棱角的时候")
 	fs := sh.NewUnicodeWordFeatureSet(text, norm.NFKC)
