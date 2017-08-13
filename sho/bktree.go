@@ -57,21 +57,31 @@ func (n *Oracle) See(f uint64) *Oracle {
 
 // Seen asks the oracle if anything closed to the fingerprint in a range (r) is seen before.
 func (n *Oracle) Seen(f uint64, r uint8) bool {
+	_, _, seen := n.Find(f, r)
+	return seen
+}
+
+// Find searches the oracle for anything closed to the fingerprint in a range (r).
+func (n *Oracle) Find(f uint64, r uint8) (uint64, uint8, bool) {
 	d := Distance(n.fingerprint, f)
 	if d < r {
-		return true
+		return n.fingerprint, d, true
 	}
 
 	// TODO - should search from d, d-1, d+1, ... until d-r and d+r, for best performance
-	for k := d - r; k <= d+r; k++ {
-		if k > 64 {
+	//for k := d - r; k <= d+r; k++ {
+	var k uint8 = 0
+	for ; k <= r; k++ {
+		if d+k > 64 {
 			break
 		}
-		if c := n.nodes[k]; c != nil {
-			if c.Seen(f, r) == true {
-				return true
-			}
+		if c := n.nodes[d+k]; c != nil {
+			print("+", f, " ", k, " ", d, " > ", c.fingerprint, "\n")
+			return c.Find(f, r)
+		} else if c := n.nodes[d-k]; c != nil {
+			print("-", f, " ", k, " ", d, " > ", c.fingerprint, "\n")
+			return c.Find(f, r)
 		}
 	}
-	return false
+	return 0, 0, false
 }
