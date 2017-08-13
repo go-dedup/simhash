@@ -264,6 +264,6 @@ The most high quality open-source Go simhash implementation available. it is eve
 
 All the following similar projects have been considered before adopting [mfonda/simhash](https://github.com/mfonda/simhash) instead.
 
-- [dgryski/go-simstore](https://github.com/dgryski/go-simstore) One of the earliest but ["_not very promising_"](https://groups.google.com/forum/#!msg/golang-nuts/E9UVskCnSJc/gm7KF27LnI0J)
+- [dgryski/go-simstore](https://github.com/dgryski/go-simstore) One of the earliest, [powerful but undocumented.](https://groups.google.com/forum/#!topic/golang-nuts/tDnJD07SkFs)
 - [AllenDang/simhash](https://github.com/AllenDang/simhash) Ported from C# code, but don't like its interface
 - [yanyiwu/gosimhash](https://github.com/yanyiwu/gosimhash) For Chinese only. Don't like keeping two packages for the same purpose, and don't like its dependency on "结巴"中文分词 approach
