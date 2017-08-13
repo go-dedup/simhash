@@ -124,6 +124,19 @@ func Example_output() {
 		}
 	}
 
+	fmt.Println("================")
+	oracle = sho.NewOracle()
+	r = uint8(8)
+	for _, d := range docs {
+		hash := sh.GetSimhash(sh.NewWordFeatureSet(d))
+		if h, nd, seen := oracle.Find(hash, r); seen == true {
+			fmt.Printf("=: Simhash of %x ignored for %x (%d).\n", hash, h, nd)
+		} else {
+			oracle.See(hash)
+			fmt.Printf("+: Simhash of %x added.\n", hash)
+		}
+	}
+
 	// Code ends
 
 	// Output:
@@ -219,4 +232,97 @@ func Example_output() {
 	// +: Simhash of 59f7ee7fe4ffa544 for ' 2015 Ford Escape 4WD 4dr SE SUV, Crossover Dual front climate control, Power windows, Power door locks, Power drivers seat, Power mirrors, Cloth seats, Heated seats, Bucket seats, Split bench seat, 17 inch alloy wheels, All season tires,… 23,000km | Automatic' added.
 	// +: Simhash of 8833db1ea6e9371e for ' Lease takeover - 2017 Mustang GT Premium w/ California Special Looking for someone to take over my lease, I am moving to the States and I cannot take this vehicle with me. Car was leased Oct/16 with 25000km annual milage. Contact me for more information. 8,950km | Automatic' added.
 	// +: Simhash of 4850d27deaad0fa4 for ' 2011 Ford Escape Hatchback Clean and reliable vehicle, never had any problems with it. Comes with winter tires 85,000km | Automatic' added.
+	// ================
+	// +: Simhash of c833835fb8ef4733 added.
+	// +: Simhash of c7ad53ee7a9354e added.
+	// +: Simhash of 58b2c31ce3ef3abd added.
+	// +: Simhash of 5876d51ea5eb2f7c added.
+	// +: Simhash of d8fafe1ee3eb3e0d added.
+	// +: Simhash of 5976ee1ea6ef375e added.
+	// +: Simhash of 8873df0fe6eb36bc added.
+	// +: Simhash of 1832c51ee6eb2e3e added.
+	// +: Simhash of 872f71fe0ebba3a added.
+	// +: Simhash of d8dcc1186ba977be added.
+	// +: Simhash of 8d63bf7ee661affc added.
+	// +: Simhash of d89abd1ceee92e7c added.
+	// +: Simhash of 9872bf7ee2e13425 added.
+	// +: Simhash of 4472bd7fe4eb154c added.
+	// +: Simhash of 4872e50fa6eb3576 added.
+	// +: Simhash of 9932b71ea4a934bd added.
+	// +: Simhash of c1b2ef3fe1b95f0e added.
+	// +: Simhash of 8f2f34ea4eb364f added.
+	// +: Simhash of 897af11ee6e9146f added.
+	// =: Simhash of 832df1ef4eb2e3e ignored for 1832c51ee6eb2e3e (6).
+	// +: Simhash of 1772193fe56b4e4a added.
+	// +: Simhash of 81cf91fe1eb4b2f added.
+	// +: Simhash of e8d6de1ee669f4fa added.
+	// =: Simhash of c833835fb8ef4733 ignored for c833835fb8ef4733 (0).
+	// =: Simhash of 58b2c31ce3ef3abd ignored for 58b2c31ce3ef3abd (0).
+	// =: Simhash of c7ad53ee7a9354e ignored for c7ad53ee7a9354e (0).
+	// +: Simhash of d8b2e11eebeb2df9 added.
+	// +: Simhash of c972bd1ce6e937fe added.
+	// +: Simhash of 5830dd1fe4eb0f7e added.
+	// +: Simhash of 4836637eb5eb223e added.
+	// +: Simhash of 983ad71ea7eb37bc added.
+	// =: Simhash of 58b2c31ce3ef3abd ignored for 58b2c31ce3ef3abd (0).
+	// +: Simhash of d8f8d73ea1e90c2c added.
+	// =: Simhash of d8f8d73ea1e90c2c ignored for d8f8d73ea1e90c2c (0).
+	// +: Simhash of 983ab95cebe2376e added.
+	// =: Simhash of d8f8d73ea1e90c2c ignored for d8f8d73ea1e90c2c (0).
+	// +: Simhash of c8f6fb3de9ef3f5e added.
+	// +: Simhash of 883a935ebeeb094f added.
+	// +: Simhash of 832b907a4eb15db added.
+	// +: Simhash of c832173fa5eb283c added.
+	// +: Simhash of cc3a491ef7eb3e20 added.
+	// +: Simhash of 9872e57ee1eb263d added.
+	// +: Simhash of c832d33fe7e91d43 added.
+	// +: Simhash of c872fb1ee6a764ac added.
+	// +: Simhash of 8b2df0ea6eb2f3c added.
+	// =: Simhash of 8329706e4eb2f3d ignored for 8b2df0ea6eb2f3c (7).
+	// =: Simhash of c7ad53ee7a9354e ignored for c7ad53ee7a9354e (0).
+	// =: Simhash of c833835fb8ef4733 ignored for c833835fb8ef4733 (0).
+	// =: Simhash of 58b2c31ce3ef3abd ignored for 58b2c31ce3ef3abd (0).
+	// +: Simhash of 8d77f55ea66175ce added.
+	// +: Simhash of 9a72753ee0e10dd6 added.
+	// +: Simhash of 32ff0fa4e33e3e added.
+	// +: Simhash of 834d55ee4eb1dae added.
+	// +: Simhash of 48d4ff3ea56b2f5f added.
+	// =: Simhash of 48d5ff3ea56b2f5f ignored for 48d4ff3ea56b2f5f (1).
+	// +: Simhash of 836ff0ee6eb379e added.
+	// +: Simhash of c83a771ea6eb167e added.
+	// +: Simhash of d83cf77ee3f897ec added.
+	// +: Simhash of a73e75ee7e917ef added.
+	// +: Simhash of d89ec51ee3ebb6a8 added.
+	// +: Simhash of 187bb73ee1e0967e added.
+	// +: Simhash of d8fec71eeba93f7e added.
+	// +: Simhash of 98727b1fe6e8244f added.
+	// +: Simhash of d8f8e03ea7ef177e added.
+	// +: Simhash of 872f07ef6a966ac added.
+	// +: Simhash of 873fd2ee46b5c0f added.
+	// =: Simhash of 873fd2ee46b5c0f ignored for 873fd2ee46b5c0f (0).
+	// +: Simhash of 4df3bf0ea7c925dc added.
+	// +: Simhash of 4872dd1ee0eb4ab4 added.
+	// =: Simhash of c7ad53ee7a9354e ignored for c7ad53ee7a9354e (0).
+	// =: Simhash of c833835fb8ef4733 ignored for c833835fb8ef4733 (0).
+	// =: Simhash of 58b2c31ce3ef3abd ignored for 58b2c31ce3ef3abd (0).
+	// +: Simhash of 9963bd0ce6013fcd added.
+	// +: Simhash of 98b6bc7ce3db0466 added.
+	// +: Simhash of 9c72bd1ea4eb367d added.
+	// +: Simhash of 43726f1ee7eb010b added.
+	// +: Simhash of 2176b94fe44b974c added.
+	// +: Simhash of 832d50ef4eb3767 added.
+	// =: Simhash of c833835fb8ef4733 ignored for c833835fb8ef4733 (0).
+	// +: Simhash of 9870fd3ca6e9371c added.
+	// +: Simhash of d8fec71aefe90e1f added.
+	// +: Simhash of 872657fe2eb1d2f added.
+	// +: Simhash of 872531eb6e9040e added.
+	// +: Simhash of 8c73fd7c86291740 added.
+	// +: Simhash of 36757fe56b1c29 added.
+	// +: Simhash of 8832d71eb4eb3fad added.
+	// +: Simhash of c036cf2de5fb2e2c added.
+	// +: Simhash of 8832dd0f24eb0049 added.
+	// +: Simhash of 88327f26f4eb0c11 added.
+	// +: Simhash of 59f7ee7fe4ffa544 added.
+	// +: Simhash of 8833db1ea6e9371e added.
+	// +: Simhash of 4850d27deaad0fa4 added.
 }

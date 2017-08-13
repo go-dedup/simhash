@@ -68,19 +68,15 @@ func (n *Oracle) Find(f uint64, r uint8) (uint64, uint8, bool) {
 		return n.fingerprint, d, true
 	}
 
-	// TODO - should search from d, d-1, d+1, ... until d-r and d+r, for best performance
-	//for k := d - r; k <= d+r; k++ {
-	var k uint8 = 0
-	for ; k <= r; k++ {
-		if d+k > 64 {
+	for k := d - r; k <= d+r; k++ {
+		if k > 64 {
 			break
 		}
-		if c := n.nodes[d+k]; c != nil {
-			print("+", f, " ", k, " ", d, " > ", c.fingerprint, "\n")
-			return c.Find(f, r)
-		} else if c := n.nodes[d-k]; c != nil {
-			print("-", f, " ", k, " ", d, " > ", c.fingerprint, "\n")
-			return c.Find(f, r)
+		if c := n.nodes[k]; c != nil {
+			//print(f, " ", k, " ", d, " > ", c.fingerprint, "\n")
+			if h, nd, seen := c.Find(f, r); seen == true {
+				return h, nd, seen
+			}
 		}
 	}
 	return 0, 0, false
