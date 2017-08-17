@@ -97,7 +97,7 @@ func (n *Oracle) Search(f uint64, r uint8) []Nigh {
 	// calculate the distance
 	d := Distance(n.fingerprint, f)
 	// if dist is less than tolerance value add it to similar matches
-	if d < r {
+	if d < r && d != 0 {
 		matches = append(matches, Nigh{n.fingerprint, d})
 	}
 
