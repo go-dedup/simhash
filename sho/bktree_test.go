@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package sho
+package sho_test
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ import (
 
 func ExampleNewOracle() {
 	// just add 0 and 1.
-	oracle := NewOracle()
+	oracle := sho.NewOracle()
 	for i := uint64(1); i < 2; i++ {
 		oracle.See(i)
 	}
@@ -58,7 +58,7 @@ func ExampleNewOracle() {
 }
 
 func BenchmarkOracleSee(b *testing.B) {
-	oracle := NewOracle()
+	oracle := sho.NewOracle()
 	for i := 0; i < b.N; i++ {
 		// for i := uint64(1); i < 10000; i++ {
 		oracle.See(uint64(i))
@@ -67,7 +67,7 @@ func BenchmarkOracleSee(b *testing.B) {
 }
 
 func BenchmarkOracleSeen(b *testing.B) {
-	oracle := NewOracle()
+	oracle := sho.NewOracle()
 	for i := uint64(1); i < 1000000; i++ {
 		oracle.See(i)
 	}
