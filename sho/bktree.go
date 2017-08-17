@@ -23,6 +23,11 @@ type Oracle struct {
 	nodes       [65]*Oracle // leaf nodes
 }
 
+type Nigh struct {
+	H uint64 // hash
+	D uint8  // distance
+}
+
 // NewOracle return an oracle that could tell if the fingerprint has been seen or not.
 func NewOracle() *Oracle {
 	return newNode(0)
@@ -61,14 +66,18 @@ func (n *Oracle) Seen(f uint64, r uint8) bool {
 	return seen
 }
 
-// Find searches the oracle for anything closed to the fingerprint in a range (r).
+// Find searches the oracle for one closed to the fingerprint in a range (r).
 func (n *Oracle) Find(f uint64, r uint8) (uint64, uint8, bool) {
 	d := Distance(n.fingerprint, f)
 	if d < r {
 		return n.fingerprint, d, true
 	}
 
-	for k := d - r; k <= d+r; k++ {
+	k := d - r
+	if k < 1 {
+		k = 1
+	}
+	for ; k <= d+r; k++ {
 		if k > 64 {
 			break
 		}
@@ -80,4 +89,31 @@ func (n *Oracle) Find(f uint64, r uint8) (uint64, uint8, bool) {
 		}
 	}
 	return 0, 0, false
+}
+
+// Search searches the oracle for all fingerprints within the range (r).
+func (n *Oracle) Search(f uint64, r uint8) []Nigh {
+	matches := []Nigh{}
+	// calculate the distance
+	d := Distance(n.fingerprint, f)
+	// if dist is less than tolerance value add it to similar matches
+	if d < r {
+		matches = append(matches, Nigh{n.fingerprint, d})
+	}
+
+	// iterate over the rest havinng tolerane in range (dist-TOL , dist+TOL)
+	k := d - r
+	if k < 1 {
+		k = 1
+	}
+	for ; k <= d+r; k++ {
+		if k > 64 {
+			break
+		}
+		if c := n.nodes[k]; c != nil {
+			t := c.Search(f, r)
+			matches = append(matches, t...)
+		}
+	}
+	return matches
 }
