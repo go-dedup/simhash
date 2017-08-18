@@ -137,6 +137,16 @@ func Example_output() {
 		}
 	}
 
+	fmt.Println("================")
+	oracle = sho.NewOracle()
+	r = uint8(8)
+	for _, d := range docs {
+		hash := sh.GetSimhash(sh.NewWordFeatureSet(d))
+		if n := oracle.Search(hash, r); len(n) > 0 {
+			fmt.Printf("!: Similiar found for %x (:%v).\n", hash, n)
+		}
+	}
+
 	// Code ends
 
 	// Output:
@@ -325,4 +335,5 @@ func Example_output() {
 	// +: Simhash of 59f7ee7fe4ffa544 added.
 	// +: Simhash of 8833db1ea6e9371e added.
 	// +: Simhash of 4850d27deaad0fa4 added.
+	// ================
 }
