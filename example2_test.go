@@ -23,7 +23,7 @@ func testit() {
 
 // for standalone test, change package to `main` and the next func def to,
 // func main() {
-func Example_Compare() {
+func ExampleCompare() {
 	doc2 = [][]byte{
 		[]byte("Ford F-150. Lariat DO NOT BUY. Truck has been in the shop 50 days so far. It has had a vibration since day one and Ford cannot get rid of it. The have done everything possible to the underside of this truck and it is… 11,000km | Automatic"),
 		[]byte("2016 Ford Mustang 2016 Ford Mustang white with black stripes, this car is in showroom shape and it only has 14,000kms. this beast has never been in an accident nor does it have one scratch on the body. i purchased 20… 14,000km | Automatic"),
