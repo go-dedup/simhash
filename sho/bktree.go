@@ -23,6 +23,7 @@ type Oracle struct {
 	nodes       [65]*Oracle // leaf nodes
 }
 
+// Nigh is a tuple that describes both the hash and the distance
 type Nigh struct {
 	H uint64 // hash
 	D uint8  // distance
