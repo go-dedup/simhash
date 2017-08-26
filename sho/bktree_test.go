@@ -78,13 +78,91 @@ func BenchmarkOracleSeen(b *testing.B) {
 	}
 }
 
-func ExampleSearch() {
+func ExampleSearch_cars() {
 	docs := [][]byte{
 		[]byte("2013 Ford Fiesta Sedan - 22,116 kms Body is in perfect condition. No mechanical problems. Oil change and maintenance package done in March/17. Registered inspection done in April/16. $10,000 firm (sales tax is extra). Call … 22,120km | Automatic"),
 		[]byte("2015 Ford Explorer Sport SUV, Crossover This vehicle is a real beauty and a pleasure to drive. It is in excellent condition and has been store inside since purchased in 2015. It has not been driven in winter other then to go for service.!… 18,600km | Automatic"),
 		[]byte("Ford F-150. Lariat DO NOT BUY. Truck has been in the shop 50 days so far. It has had a vibration since day one and Ford cannot get rid of it. The have done everything possible to the underside of this truck and it is… 11,000km | Automatic"),
 		[]byte("2016 Ford Mustang 2016 Ford Mustang white with black stripes, this car is in showroom shape and it only has 14,000kms. this beast has never been in an accident nor does it have one scratch on the body. i purchased 20… 14,000km | Automatic"),
 	}
+	testOracle(docs, 9)
+	// Output:
+	// true: [{626808552180887356 7} {590779825190022718 8}]
+	// true: [{590700557005172541 7} {590779825190022718 7}]
+	// true: [{590779825190022718 6}]
+	// true: [{590700557005172541 8} {1743672742259666494 6} {626808552180887356 7}]
+}
+
+func ExampleSearch_filesA() {
+	docs := [][]byte{
+		[]byte("test/sim/Audio Book - The Grey Coloured Bunnie.mp3"),
+		[]byte("test/sim/GNU - Python Standard Library (2001).rar"),
+		[]byte("test/sim/PopupTest.java"),
+		[]byte("test/sim/(eBook) GNU - Python Standard Library 2001.pdf"),
+		[]byte("test/sim/Python Standard Library.zip"),
+		[]byte("test/sim/GNU - 2001 - Python Standard Library.pdf"),
+		[]byte("test/sim/LayoutTest.java"),
+		[]byte("test/sim/ColoredGrayBunny.ogg"),
+	}
+	testOracle(docs, 12)
+	// Output:
+	// true: []
+	// true: [{15895313301139093466 7}]
+	// true: []
+	// true: [{15896913090289004511 9}]
+	// true: [{15895225339941416922 7}]
+	// true: [{15896913088138765851 9} {15895225339941416922 6} {15895313301139093466 11}]
+	// true: []
+	// true: []
+}
+
+func ExampleSearch_filesB() {
+	docs := [][]byte{
+		[]byte("test/sim/LayoutTest.java"),
+		[]byte("test/sim/ColoredGrayBunny.ogg"),
+		[]byte("test/sim/GNU - 2001 - Python Standard Library.pdf"),
+		[]byte("test/sim/PopupTest.java"),
+		[]byte("test/sim/(eBook) GNU - Python Standard Library 2001.pdf"),
+		[]byte("test/sim/GNU - Python Standard Library (2001).rar"),
+		[]byte("test/sim/Python Standard Library.zip"),
+		[]byte("test/sim/Audio Book - The Grey Coloured Bunnie.mp3"),
+	}
+	testOracle(docs, 12)
+	// Output:
+	// true: []
+	// true: []
+	// true: [{15896913088138765851 9} {15895313301139093466 11}]
+	// true: []
+	// true: [{15896913090289004511 9}]
+	// true: [{15896913090289004511 6} {15895313301139093466 7}]
+	// true: [{15896913090289004511 11}]
+	// true: []
+}
+
+func ExampleSearch_filesS() {
+	docs := [][]byte{
+		[]byte("test/sim/Audio Book - The Grey Coloured Bunnie.mp3"),
+		[]byte("test/sim/ColoredGrayBunny.ogg"),
+		[]byte("test/sim/(eBook) GNU - Python Standard Library 2001.pdf"),
+		[]byte("test/sim/GNU - 2001 - Python Standard Library.pdf"),
+		[]byte("test/sim/GNU - Python Standard Library (2001).rar"),
+		[]byte("test/sim/LayoutTest.java"),
+		[]byte("test/sim/PopupTest.java"),
+		[]byte("test/sim/Python Standard Library.zip"),
+	}
+	testOracle(docs, 12)
+	// Output:
+	// true: []
+	// true: []
+	// true: [{15896913090289004511 9}]
+	// true: [{15896913088138765851 9} {15895313301139093466 11}]
+	// true: [{15896913090289004511 6} {15895313301139093466 7}]
+	// true: []
+	// true: []
+	// true: [{15896913090289004511 11}]
+}
+
+func testOracle(docs [][]byte, r uint8) {
 	oracle := sho.NewOracle()
 	sh := simhash.NewSimhash()
 	hashes := make([]uint64, len(docs))
@@ -92,7 +170,9 @@ func ExampleSearch() {
 		hashes[i] = sh.GetSimhash(sh.NewWordFeatureSet(d))
 		oracle.See(hashes[i])
 	}
-	fmt.Printf("%v\n", oracle.Search(hashes[0], uint8(9)))
-	// Output:
-	// [{626808552180887356 7} {590779825190022718 8}]
+
+	for _, h := range hashes {
+		fmt.Printf("%v: %v\n", oracle.Seen(h, r), oracle.Search(h, r))
+
+	}
 }
