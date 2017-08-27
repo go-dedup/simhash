@@ -103,11 +103,11 @@ func (n *Oracle) Search(f uint64, r uint8) []Nigh {
 	}
 
 	// iterate over the rest havinng tolerane in range (dist-TOL , dist+TOL)
-	k := d - r
+	k := int16(d) - int16(r)
 	if k < 1 {
 		k = 1
 	}
-	for ; k <= d+r; k++ {
+	for ; k <= int16(d)+int16(r); k++ {
 		if k > 64 {
 			break
 		}
