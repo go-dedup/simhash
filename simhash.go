@@ -14,6 +14,8 @@ import (
 	"bytes"
 	"hash/fnv"
 	"regexp"
+
+	"github.com/go-dedup/text"
 )
 
 type Simhash interface {
@@ -21,6 +23,7 @@ type Simhash interface {
 	Vectorize(features []Feature) Vector
 	VectorizeBytes(features [][]byte) Vector
 	Fingerprint(v Vector) uint64
+	BuildSimhash(doc string, doc2words text.Doc2Words) uint64
 	GetSimhash(fs FeatureSet) uint64
 	SimhashBytes(b [][]byte) uint64
 	NewWordFeatureSet(b []byte) *WordFeatureSet
@@ -45,6 +48,13 @@ type Feature interface {
 type FeatureSet interface {
 	GetFeatures() []Feature
 }
+
+var Doc2words = text.GetWordsFactory(text.Decorators(
+	text.SplitCamelCase,
+	text.ToLower,
+	text.RemovePunctuation,
+	text.Compact,
+))
 
 ////////////////////////////////////////////////////////////////////////////
 // Function definitions
@@ -156,6 +166,17 @@ func Compare(a uint64, b uint64) uint8 {
 		v &= v - 1
 	}
 	return c
+}
+
+// BuildSimhash returns a 64-bit simhash of the given string
+func (st *SimhashBase) BuildSimhash(doc string, doc2words text.Doc2Words) uint64 {
+	words := doc2words(doc)
+	features := make([]Feature, len(words))
+	for i, w := range words {
+		features[i] = NewFeature([]byte(w))
+	}
+	//fmt.Printf("%#v\n", features)
+	return st.Fingerprint(st.Vectorize(features))
 }
 
 // GetSimhash returns a 64-bit simhash of the given feature set

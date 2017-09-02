@@ -65,9 +65,11 @@ func ExampleNewWordFeatureSet() {
 	fmt.Printf("%#v\n", fs)
 	actual := fs.GetFeatures()
 	fmt.Printf("%#v\n", actual)
+	fmt.Printf("%v\n", sh.Fingerprint(sh.Vectorize(actual)))
 	// Output:
 	// &simhash.WordFeatureSet{B:[]uint8{0x61, 0x20, 0x61, 0x20, 0x61, 0x62, 0x63, 0x20, 0x61, 0x62, 0x63, 0x20, 0x74, 0x65, 0x73, 0x74, 0x20, 0x74, 0x65, 0x73, 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x2e}}
 	// []simhash.Feature{simhash.feature{sum:0xaf63bd4c8601b7be, weight:1}, simhash.feature{sum:0xaf63bd4c8601b7be, weight:1}, simhash.feature{sum:0xd8dcca186bafadcb, weight:1}, simhash.feature{sum:0xd8dcca186bafadcb, weight:1}, simhash.feature{sum:0x8c093f7e9fccbf69, weight:1}, simhash.feature{sum:0x8c093f7e9fccbf69, weight:1}, simhash.feature{sum:0x9926dcde0a17d48e, weight:1}}
+	// 10108821242876116971
 }
 
 func TestGetFeatures(t *testing.T) {
