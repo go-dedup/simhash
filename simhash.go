@@ -170,13 +170,18 @@ func Compare(a uint64, b uint64) uint8 {
 
 // BuildSimhash returns a 64-bit simhash of the given string
 func (st *SimhashBase) BuildSimhash(doc string, doc2words text.Doc2Words) uint64 {
+	return st.Fingerprint(st.Vectorize(BuildFeatures(doc, doc2words)))
+}
+
+// BuildFeatures returns a []Feature representing each word in the byte slice
+func BuildFeatures(doc string, doc2words text.Doc2Words) []Feature {
 	words := doc2words(doc)
 	features := make([]Feature, len(words))
 	for i, w := range words {
 		features[i] = NewFeature([]byte(w))
 	}
 	//fmt.Printf("%#v\n", features)
-	return st.Fingerprint(st.Vectorize(features))
+	return features
 }
 
 // GetSimhash returns a 64-bit simhash of the given feature set
