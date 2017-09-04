@@ -54,6 +54,7 @@ var Doc2words = text.GetWordsFactory(text.Decorators(
 	text.ToLower,
 	text.RemovePunctuation,
 	text.Compact,
+	text.Trim,
 ))
 
 ////////////////////////////////////////////////////////////////////////////

@@ -57,19 +57,19 @@ func ExampleFind() {
 	// Code ends
 
 	// Output:
-	// +: Simhash of 4df63c2ea0a327d6 for 'GNU - Python Standard Library (2001)' added.
-	// =: Simhash of f733d6ea421279e for '(eBook) GNU - Python Standard Library 2001' ignored.
+	// +: Simhash of 55d4263ae1a6e6d6 for 'GNU - Python Standard Library (2001)' added.
+	// =: Simhash of d5d6363ef9e6e6d7 for '(eBook) GNU - Python Standard Library 2001' ignored.
 	// =: Simhash of 55b47e2af1a4a4d2 for 'Python Standard Library' ignored.
-	// =: Simhash of 5df77f2ef1e3afde for 'GNU - 2001 - Python Standard Library' ignored.
+	// =: Simhash of 55d4263ae1a6e6d6 for 'GNU - 2001 - Python Standard Library' ignored.
 	// ================
-	// >: [gn u python standard library 2001 ]
-	// +: Simhash of 4df63c2ea0a327d6 added.
-	// >: [ e book gn u python standard library 2001]
-	// =: Simhash of f733d6ea421279e ignored for 4df63c2ea0a327d6 (12).
+	// >: [gnu python standard library 2001]
+	// +: Simhash of 55d4263ae1a6e6d6 added.
+	// >: [ebook gnu python standard library 2001]
+	// =: Simhash of d5d6363ef9e6e6d7 ignored for 55d4263ae1a6e6d6 (8).
 	// >: [python standard library]
-	// =: Simhash of 55b47e2af1a4a4d2 ignored for 4df63c2ea0a327d6 (17).
-	// >: [gn u 2001 python standard library]
-	// =: Simhash of 5df77f2ef1e3afde ignored for 4df63c2ea0a327d6 (12).
+	// =: Simhash of 55b47e2af1a4a4d2 ignored for 55d4263ae1a6e6d6 (11).
+	// >: [gnu 2001 python standard library]
+	// =: Simhash of 55d4263ae1a6e6d6 ignored for 55d4263ae1a6e6d6 (0).
 }
 
 // ================

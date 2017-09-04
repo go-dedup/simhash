@@ -25,12 +25,12 @@ func ExampleBuildSimhash() {
 	fmt.Printf("Comparison of `%s` and `%s`: %d\n", docs[0], docs[3], simhash.Compare(hashes[0], hashes[3]))
 
 	// Output:
-	// Simhash of 'la fin d'un bel après-midi d'été': 8a73bd4c862137a8
+	// Simhash of 'la fin d'un bel après-midi d'été': 8e73bd4ca6a9b7aa
 	// Simhash of 'bonne après-midi': cef7bd7ec38ff5ac
 	// Simhash of 'Bonjour': ac5261af4fdd5252
 	// Simhash of 'Bonsoir': fb42ceaf7cda4905
-	// Comparison of `la fin d'un bel après-midi d'été` and `bonne après-midi`: 19
-	// Comparison of `la fin d'un bel après-midi d'été` and `Bonjour`: 35
+	// Comparison of `la fin d'un bel après-midi d'été` and `bonne après-midi`: 17
+	// Comparison of `la fin d'un bel après-midi d'été` and `Bonjour`: 33
 	// Comparison of `la fin d'un bel après-midi d'été` and `Bonsoir`: 41
 }
 
